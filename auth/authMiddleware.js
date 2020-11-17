@@ -1,4 +1,6 @@
 const db = require('../data/config');
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
 
 module.exports = {
     async verifyNewUser(req, res, next) {
@@ -26,5 +28,18 @@ module.exports = {
         } else {
             next();
         }
+    },
+    async secureLogin(req, res, next) {
+        const token = req.headers.authorization;
+        if (!token) {
+            next({code: 401, message: 'must be logged in to do that'})
+        }
+        jwt.verify(token, process.env.SECRET_STRING, (err, decoded) => {
+            if (err) {
+                next({code: 500, message: err.message})
+            } else {
+                next();
+            }
+        })
     }
 }
