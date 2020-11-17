@@ -7,7 +7,7 @@ const eventsRouter = require('../events/eventsRouter');
 app.use(express.json())
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/events', eventsRouter)
+app.use('/api/projects', eventsRouter)
 
 app.get('/api/test', (req, res, next)=>{
     res.json({message: 'affirmative'})

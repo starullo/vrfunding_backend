@@ -15,7 +15,6 @@ exports.up = function(knex) {
       tbl.string('project_description', 128).notNullable()
       tbl.string('photo_src', 500)
       tbl.float('funding_goal').notNullable()
-      tbl.float('current_fund')
       tbl.integer('creator_id').notNullable()
       .unsigned()
       .references('id')
