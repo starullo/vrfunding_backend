@@ -1,8 +1,10 @@
 const express = require('express');
 const User = require('./usersActions');
+const Event = require('../events/eventsActions');
 const {verifyPutRequest} = require('./usersMiddleware');
 const {getEventByCreator} = require('../events/eventsActions');
-const {secureLogin, secureId} = require('../auth/authMiddleware')
+const {secureLogin, secureId} = require('../auth/authMiddleware');
+const {verifyNewEventPost, verifyFunder, verifyFundraiser} = require('../events/eventsMiddleware');
 
 const router = express.Router();
 
@@ -42,6 +44,20 @@ router.get('/:userId/projects', [secureLogin, secureId], (req, res, next)=>{
     })
 })
 
+router.get('/:userId/funds')
+
+router.post('/:userId/projects', [secureLogin, secureId, verifyFundraiser, verifyNewEventPost], (req, res, next)=>{
+    console.log('hi')
+    console.log(req.params.userId)
+    Event.addEvent({...req.body, creator_id: req.params.userId})
+    .then(data=>{
+        res.status(201).json(data);
+    })
+    .catch(err=>{
+        res.status(500).json({message: err.message})
+    })
+})
+
 router.put('/:userId', [secureLogin, secureId, verifyPutRequest], (req, res, next)=>{
     User.updateUser(req.params.id, req.body)
     .then(data=>{
@@ -67,9 +83,6 @@ router.delete('/:userId', secureLogin, (req, res, next)=>{
 
 
 
-router.use((err, req, res, next)=>{
-    res.status(err.code).json({message: err.message})
-})
 
 
 module.exports = router;
