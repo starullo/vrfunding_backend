@@ -41,10 +41,4 @@ router.post('/login', verifyLogin, async (req, res, next)=>{
 
 
 
-
-
-router.use((err, req, res, next)=>{
-    res.status(err.code).json({message: err.message})
-})
-
 module.exports = router;
