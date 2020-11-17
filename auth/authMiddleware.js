@@ -41,5 +41,16 @@ module.exports = {
                 next();
             }
         })
+    },
+    async secureId(req, res, next) {
+        const token = req.headers.authorization;
+        jwt.verify(token, process.env.SECRET_STRING, (err, decoded)=>{
+            console.log(decoded.userId, req.params.userId)
+            if (decoded.userId == req.params.userId || decoded.role === 'admin') {
+                next();
+            } else {
+                next({code: 404, message: 'must be the correct user to perform that action'})
+            }
+        })
     }
 }

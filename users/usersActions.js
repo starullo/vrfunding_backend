@@ -4,21 +4,9 @@ module.exports = {
     getUsers() {
         return db('users');
     },
-    getUserById(id) {
-        const promise = new Promise((resolve, reject)=>{
-            db('users').where({id})
-            .then(([user])=>{
-                if (!user) {
-                    reject('no user with that id')
-                } else {
-                    resolve(user)
-                }
-            })
-            .catch(err=>{
-                reject(err.message)
-            })
-        })
-        return promise;
+    async getUserById(id) {
+      return db('users').where({id}).first();
+      
     },
     getUserByDisplayName(displayName) {
         const promise = new Promise((resolve, reject)=>{
