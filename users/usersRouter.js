@@ -33,7 +33,7 @@ router.get('/:userId', secureLogin, (req, res, next)=>{
     })
 })
 
-router.get('/:userId/projects', [secureLogin, secureId], (req, res, next)=>{
+router.get('/:userId/projects', [secureLogin], (req, res, next)=>{
     getEventByCreator(req.params.userId)
     .then(data=>{
         console.log(data)
@@ -46,7 +46,7 @@ router.get('/:userId/projects', [secureLogin, secureId], (req, res, next)=>{
 
 router.get('/:userId/funds')
 
-router.post('/:userId/projects', [secureLogin, secureId, verifyFundraiser, verifyNewEventPost], (req, res, next)=>{
+router.post('/:userId/projects', [secureLogin, verifyFundraiser, verifyNewEventPost], (req, res, next)=>{
     console.log('hi')
     console.log(req.params.userId)
     Event.addEvent({...req.body, creator_id: req.params.userId})
@@ -58,18 +58,21 @@ router.post('/:userId/projects', [secureLogin, secureId, verifyFundraiser, verif
     })
 })
 
-router.put('/:userId', [secureLogin, secureId, verifyPutRequest], (req, res, next)=>{
+router.put('/:id', [secureLogin,verifyPutRequest], (req, res, next)=>{
+    console.log(req.body)
+    console.log(req.params)
     User.updateUser(req.params.id, req.body)
     .then(data=>{
         res.json(data)
     })
     .catch(err=>{
+        console.log('what')
         res.status(400).json({message: err.message})
     })
 })
 
-router.delete('/:userId', [secureLogin, secureId], (req, res, next)=>{
-    User.deleteUser(req.params.id)
+router.delete('/:userId', [secureLogin], (req, res, next)=>{
+    User.deleteUser(req.params.userId)
     .then(data=>{
         res.json({message: data})
     })

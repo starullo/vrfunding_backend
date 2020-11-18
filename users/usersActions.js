@@ -35,14 +35,11 @@ module.exports = {
         return addedUser;
     },
     async updateUser(id, changes) {
-        const userId = await db('users').update(changes).where({id});
-        console.log(userId)
-        const user = await db('users').where({id}).first();
-        console.log(user)
-        return user;
+        await db('users').update(changes).where({id});
+        return db('users').where({id}).first()
     },
     async deleteUser(id) {
-        const user = await db('users').where({id}).first();
+        const [user] = await db('users').where({id})
         if (!user) {
             console.log('wow')
             return 'user with the id of ' + id + ' does not exist'
