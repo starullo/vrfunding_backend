@@ -79,7 +79,7 @@ router.get('/:projectId/funds', (req, res, next)=>{
 })
 
 
-router.post('/:projectId/funds', [verifyNewFund, verifyFunder], (req, res, next)=>{
+router.post('/:projectId/funds', [verifyNewFund], (req, res, next)=>{
     const token = req.headers.authorization;
     let theId;
     jwt.verify(token, process.env.SECRET_STRING, (err, decoded)=>{
@@ -94,7 +94,7 @@ router.post('/:projectId/funds', [verifyNewFund, verifyFunder], (req, res, next)
     })
 })
 
-router.put('/:projectId/funds/:fundId', [verifyNewFund, verifyFunder], async (req, res, next)=>{
+router.put('/:projectId/funds/:fundId', [verifyNewFund], async (req, res, next)=>{
     const x = await db('donations').where({id: req.params.fundId}).first();
     if (!x) {
         res.status(404).json({message: 'no fund with that id'})
