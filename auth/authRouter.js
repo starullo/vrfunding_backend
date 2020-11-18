@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const router = express.Router();
 
-router.post('/register', (req, res, next)=>{
+router.post('/register', verifyNewUser, (req, res, next)=>{
     const {display_name, password, role, email, photo_src} = req.body;
     const hash = bcrypt.hashSync(password, 10);
     const newUser = {display_name, password: hash, role, email, photo_src};
@@ -22,7 +22,9 @@ router.post('/register', (req, res, next)=>{
 })
 
 router.post('/login', verifyLogin, async (req, res, next)=>{
+    try {
     const {email, password} = req.body;
+    console.log(req.body)
     let user = await db('users').where({email}).first();
     console.log(user)
     const valid = await bcrypt.compare(password, user.password);
@@ -36,6 +38,9 @@ router.post('/login', verifyLogin, async (req, res, next)=>{
     }, process.env.SECRET_STRING);
     console.log(user)
     res.json({message: 'welcome back, ' + user.display_name, role: user.role, token})
+} catch(err) {
+    res.status(500).json({message: err.message})
+}
 })
 
 
