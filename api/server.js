@@ -36,16 +36,6 @@ app.put('/api/funds/:id', secureLogin, async (req, res, next)=>{
     if (!req.body.amount) {
         res.status(400).json({message: '"amount" is a required field'})
     }
-    const donation = await db('donations').where({id: req.params.id});
-    let theId;
-    const token = req.headers.authorization;
-    jwt.verify(token, process.env.SECRET_STRING, (err, decoded) => {
-        theId = decoded.userId;
-    })
-
-    if (donation.donor_id != theId) {
-        res.status(404).json({message: 'you must be the donor to edit the donation'})
-    }
 
     const x = await db('donations').update(req.body).where({id: req.params.id});
     const newDonation = await db('donations').where({id: req.params.id});
@@ -53,16 +43,7 @@ app.put('/api/funds/:id', secureLogin, async (req, res, next)=>{
 })
 
 app.delete('/api/funds/:id', secureLogin, async (req, res, next)=>{
-    const donation = await db('donations').where({id: req.params.id});
-    let theId;
-    const token = req.headers.authorization;
-    jwt.verify(token, process.env.SECRET_STRING, (err, decoded) => {
-        theId = decoded.userId;
-    })
 
-    if (donation.donor_id != theId) {
-        res.status(404).json({message: 'you must be the donor to edit the donation'})
-    }
 
     const wow = await db('donations').where({id: req.params.id});
     res.json({message: 'donation with the id of ' + req.params.id + ' was successfully deleted'})
