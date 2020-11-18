@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const router = express.Router();
 
-router.post('/register', verifyNewUser, (req, res, next)=>{
+router.post('/register', (req, res, next)=>{
     const {display_name, password, role, email, photo_src} = req.body;
     const hash = bcrypt.hashSync(password, 10);
     const newUser = {display_name, password: hash, role, email, photo_src};
