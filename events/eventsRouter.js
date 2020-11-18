@@ -17,6 +17,16 @@ router.get('/', secureLogin, (req, res, next)=>{
     })
 })
 
+router.get('/:projectId', secureLogin, (req, res, next)=>{
+    Event.getEventById(req.params.projectId)
+    .then(data=>{
+        res.json(data)
+    })
+    .catch(err=>{
+        res.status(500).json({message: err.message})
+    })
+})
+
 router.post('/', [secureLogin,verifyNewEventPost, verifyFundraiser], (req, res, next)=>{
     const token = req.headers.authorization;
     let theId;
@@ -68,15 +78,6 @@ router.get('/:projectId/funds', (req, res, next)=>{
     })
 })
 
-router.get('/:projectId/funds/:fundId', async (req, res, next)=>{
-    const x = await db('donations').where({id: req.params.fundId}).first();
-    console.log(req.params.fundId)
-    console.log(x)
-    if (!x) {
-        res.status(401).json({message: 'no fund with that id'})
-    }
-    res.json(x)
-})
 
 router.post('/:projectId/funds', [verifyNewFund, verifyFunder], (req, res, next)=>{
     const token = req.headers.authorization;
@@ -91,6 +92,14 @@ router.post('/:projectId/funds', [verifyNewFund, verifyFunder], (req, res, next)
     .catch(err=>{
         res.status(500).json({message: err.message})
     })
+})
+
+router.put('/:projectId/funds/:fundId', [verifyNewFund, verifyFunder], async (req, res, next)=>{
+    const x = await db('donations').where({id: req.params.fundId}).first();
+    if (!x) {
+        res.status(404).json({message: 'no fund with that id'})
+    }
+    Event.updateFund(req.params.fundId, req.body)
 })
 
 router.delete('/:projectId/funds/:fundId', async (req, res, next)=>{

@@ -1,4 +1,5 @@
 const db = require('../data/config');
+const { where } = require('../data/config');
 
 module.exports = {
     async getAllEvents() {
@@ -44,5 +45,12 @@ module.exports = {
     },
     async getFundById(id) {
         return db('donations').where({id}).first();
+    },
+    async deleteFund(id) {
+        return db('donations').where({id}).first();
+    },
+    async updateFund(id, update) {
+        const x = await db('donations').update(update).where({id});
+        return db('donations').where({id});
     }
 }
