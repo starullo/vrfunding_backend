@@ -8,7 +8,7 @@ const cors = require('cors');
 const {secureLogin} = require('../auth/authMiddleware');
 
 app.use(express.json());
-app.use(cors());
+app.use(cors()) 
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/projects', eventsRouter)

@@ -36,6 +36,7 @@ module.exports = {
         }
         jwt.verify(token, process.env.SECRET_STRING, (err, decoded) => {
             if (err) {
+                console.log('wowowowo')
                 next({code: 500, message: err.message})
             } else {
                 next();
