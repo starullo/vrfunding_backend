@@ -27,7 +27,7 @@ router.get('/:projectId', secureLogin, (req, res, next)=>{
     })
 })
 
-router.post('/', [secureLogin,verifyNewEventPost, verifyFundraiser], (req, res, next)=>{
+router.post('/', [secureLogin,verifyNewEventPost], (req, res, next)=>{
     const token = req.headers.authorization;
     let theId;
     jwt.verify(token, process.env.SECRET_STRING, (err, decoded)=>{
