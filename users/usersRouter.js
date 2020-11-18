@@ -68,7 +68,7 @@ router.put('/:userId', [secureLogin, secureId, verifyPutRequest], (req, res, nex
     })
 })
 
-router.delete('/:userId', secureLogin, (req, res, next)=>{
+router.delete('/:userId', [secureLogin, secureId], (req, res, next)=>{
     User.deleteUser(req.params.id)
     .then(data=>{
         res.json({message: data})
