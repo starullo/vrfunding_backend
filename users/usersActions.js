@@ -28,10 +28,8 @@ module.exports = {
         return user;
     },
     async addUser(user) {
-        console.log('woeifje')
         const [id] = await db('users').insert(user);
         const addedUser = await db('users').where({id}).first();
-        console.log(id, addedUser)
         return addedUser;
     },
     async updateUser(id, changes) {

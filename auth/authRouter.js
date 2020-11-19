@@ -24,19 +24,15 @@ router.post('/register', verifyNewUser, (req, res, next)=>{
 router.post('/login', verifyLogin, async (req, res, next)=>{
     try {
     const {email, password} = req.body;
-    console.log(req.body)
     let user = await db('users').where({email}).first();
-    console.log(user)
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
         res.status(400).json({message: 'incorrect password'})
     }
-    console.log(valid)
     const token = jwt.sign({
         userId: user.id,
         role: user.role
     }, process.env.SECRET_STRING);
-    console.log(user)
     res.json({message: 'welcome back, ' + user.display_name, role: user.role, token})
 } catch(err) {
     res.status(500).json({message: err.message})

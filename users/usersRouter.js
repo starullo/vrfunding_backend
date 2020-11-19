@@ -24,7 +24,7 @@ router.get('/:userId', secureLogin, (req, res, next)=>{
     User.getUserById(req.params.userId)
     .then(data=>{
         if (!data) {
-            res.status(400).json({message: 'no user with that id'})
+            res.status(404).json({message: 'no user with that id'})
         }
         res.json(data)
     })
@@ -80,6 +80,7 @@ router.delete('/:userId', [secureLogin], (req, res, next)=>{
         res.status(500).json({message: err.message})
     })
 })
+
 
 
 

@@ -7,6 +7,7 @@ const db = require('../data/config');
 const cors = require('cors');
 const {secureLogin} = require('../auth/authMiddleware');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 app.use(express.json());
 app.use(cors()) 
@@ -15,6 +16,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/projects', eventsRouter)
 
 app.get('/api/test', (req, res, next)=>{
+    console.log(process.env.DB_ENV)
     res.json({message: 'affirmative'})
 })
 

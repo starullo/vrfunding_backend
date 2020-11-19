@@ -35,7 +35,7 @@ router.post('/', [secureLogin,verifyNewEventPost], (req, res, next)=>{
     })
     Event.addEvent({...req.body, creator_id: theId})
     .then(data=>{
-        res.json(data)
+        res.status(201).json(data)
     })
     .catch(err=>{
         res.status(500).json({message: err.message})

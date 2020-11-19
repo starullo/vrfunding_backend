@@ -12,12 +12,9 @@ module.exports = {
         }
        
             const user = await db('users').where({email: req.body.email}).first();
-            console.log('hi')
             if (!user) {
-                console.log(user)
                 next()
             } else {
-                console.log(user)
                 next({code: 404, message: 'already a user with that email'});
             }
     },
@@ -36,7 +33,6 @@ module.exports = {
         }
         jwt.verify(token, process.env.SECRET_STRING, (err, decoded) => {
             if (err) {
-                console.log('wowowowo')
                 next({code: 500, message: err.message})
             } else {
                 next();
