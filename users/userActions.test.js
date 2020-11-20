@@ -79,6 +79,7 @@ describe('users model', () => {
 
             newUser = await User.updateUser(1, {display_name: 'hey', email: 'wow', password: 'wow', role: 'funder'});
             expect(newUser.display_name).toEqual('hey')
+            console.log(process.env.DB_ENV)
         })
     })
 })
