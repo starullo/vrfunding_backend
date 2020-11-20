@@ -8,24 +8,11 @@ module.exports = {
       return db('users').where({id}).first();
       
     },
-    getUserByDisplayName(displayName) {
-        const promise = new Promise((resolve, reject)=>{
-            db('users').where({display_name: displayName})
-            .then(([user])=>{
-                if (!user) {
-                    reject('no user with that id')
-                } else {
-                    resolve(user)
-                }
-            })
-            .catch(err=>{
-                reject(err.message)
-            })
-        })
+    async getUserByDisplayName(displayName) {
+        return db('users').where({display_name: displayName}).first()
     },
     async getUserByEmail(email) {
-        const user = await db('users').where({email});
-        return user;
+        return db('users').where({email}).first();
     },
     async addUser(user) {
         const [id] = await db('users').insert(user);
@@ -33,7 +20,7 @@ module.exports = {
         return addedUser;
     },
     async updateUser(id, changes) {
-        await db('users').update(changes).where({id});
+        let wow = await db('users').update(changes).where({id});
         return db('users').where({id}).first()
     },
     async deleteUser(id) {
