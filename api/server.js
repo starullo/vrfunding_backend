@@ -47,7 +47,7 @@ app.put('/api/funds/:id', secureLogin, async (req, res, next)=>{
 app.delete('/api/funds/:id', secureLogin, async (req, res, next)=>{
 
 
-    const wow = await db('donations').where({id: req.params.id});
+    const wow = await db('donations').where({id: req.params.id}).delete();
     res.json({message: 'donation with the id of ' + req.params.id + ' was successfully deleted'})
 })
 

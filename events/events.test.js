@@ -9,10 +9,12 @@ const fuckingToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInJvb
 
 beforeEach(async () => {
     await db('projects').truncate();
+    await db('donations').truncate();
 })
 
 afterAll(async () => {
     await db('projects').truncate();
+    await db('donations').truncate();
 })
 
 beforeEach(async () => {
@@ -95,7 +97,62 @@ describe('projects', () => {
 
         await db('projects').where({id: 1}).delete();
         projects = await Event.getAllEvents;
-        console.log(projects, 'fuck this shit i hate lambda')
         expect(projects.length).toBe(0)
+    })
+    it('lets you get funds for a specific project', async () => {
+        const funds = await supertest(server)
+        .get('/api/projects/1/funds')
+        .set('Authorization', fuckingToken)
+        expect(funds.status).toBe(200)
+    })
+    it('lets you add funds for a specific project', async () => {
+        const res = await supertest(server)
+        .post('/api/projects/1/funds')
+        .send({amount: 500})
+        .set('Authorization', fuckingToken)
+        expect(res.status).toBe(201)
+        const f = await supertest(server)
+        .get('/api/funds')
+        .set('Authorization', fuckingToken)
+        expect(f.status).toBe(200)
+        const funds = await db('donations')
+        expect(funds.length).toBe(1)
+    })
+    it('lets you update a specific fund', async () => {
+        const res = await supertest(server)
+        .post('/api/projects/1/funds')
+        .send({amount: 300})
+        .set('Authorization', fuckingToken)
+        expect(res.status).toBe(201)
+        expect(res.body.amount).toBe(300)
+
+        const res2 = await supertest(server)
+        .put('/api/funds/1')
+        .send({amount: 200})
+        .set('Authorization', fuckingToken)
+        
+        const res3 = await supertest(server)
+        .get('/api/funds/1')
+        .set('Authorization', fuckingToken)
+        expect(res3.body[0].amount).toBe(200)
+    })
+    it('lets you delete a specific fund', async () => {
+        const res = await supertest(server)
+        .post('/api/projects/1/funds')
+        .send({amount: 300})
+        .set('Authorization', fuckingToken)
+        expect(res.status).toBe(201)
+        const funds = await db('donations');
+        expect(funds.length).toBe(1)
+
+        const res2 = await supertest(server)
+        .delete('/api/funds/1')
+        .set('Authorization', fuckingToken)
+        expect(res2.status).toBe(200)
+
+        const funds2 = await db('donations');
+        expect(funds2.length).toBe(0)
+
+        const wow = await db('projects');
     })
 })
